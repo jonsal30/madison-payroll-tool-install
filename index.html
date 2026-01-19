@@ -1,340 +1,111 @@
-// ==UserScript==
-// @name         Madison Bulk Import (V29.2 - Feed Aligned)
-// @namespace    http://tampermonkey.net/
-// @version      29.2
-// @description  Aligned to user feed (Full Name column included).
-// @author       John Covarrubias / Gemini
-// @match        *://*.madisonrf.com/*
-// @grant        none
-// ==/UserScript==
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Madison Payroll Tool – Install</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 36px;
+  }
+  .step {
+    background: #ffffff;
+    border: 2px solid #0056b3;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 30px 0;
+  }
+  .step h2 {
+    font-size: 28px;
+    margin-top: 0;
+  }
+  .big {
+    font-size: 22px;
+    font-weight: bold;
+  }
+  a.button {
+    display: block;
+    background: #007bff;
+    color: white;
+    text-align: center;
+    padding: 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 22px;
+    margin-top: 15px;
+  }
+  a.button.green { background: #28a745; }
+  a.button.orange { background: #fd7e14; }
+  .note {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+</style>
+</head>
 
-(function () {
-    'use strict';
+<body>
 
-    /* ============================================================
-       GLOBAL SAFETY FLAGS
-       ============================================================ */
-    let HALT_AUTOMATION = false;
-    let REDIRECT_IN_PROGRESS = false;
+<h1>Madison Payroll Tool<br>NO READERS NEEDED INSTALL</h1>
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            HALT_AUTOMATION = true;
-            console.warn('[Madison Bulk Import] Automation halted by user.');
-            const msg = document.getElementById('msgArea');
-            if (msg) {
-                msg.innerText = '⛔ Automation halted (ESC)';
-                msg.style.color = 'red';
-                msg.style.fontWeight = 'bold';
-            }
-        }
-    });
+<div class="step">
+  <h2>STEP 1 — Install Tampermonkey</h2>
+  <p class="big">Click this link, then click “Add to Chrome”.</p>
+  <a class="button" href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank">
+    INSTALL TAMPERMONKEY
+  </a>
+</div>
 
-    /* ============================================================
-       STORAGE
-       ============================================================ */
-    const STORAGE_KEY_DATA = 'madison_payroll_data';
-    const STORAGE_KEY_INDEX = 'madison_payroll_index';
+<div class="step">
+  <h2>STEP 2 — Turn This ON (REQUIRED)</h2>
+  <p class="big">Type this in Chrome and press Enter:</p>
+  <p class="big">chrome://extensions/</p>
+  <p class="note">
+    • Click <b>Details</b> on Tampermonkey<br>
+    • Make sure <b>TAMPERMONKEY = ON</b><br>
+    • Turn <b>ALLOW USER SCRIPTS = ON</b><br><br>
+    <b>BOTH switches must be BLUE</b>
+  </p>
+</div>
 
-    let allRows = JSON.parse(localStorage.getItem(STORAGE_KEY_DATA) || '[]');
-    let currentIndex = parseInt(localStorage.getItem(STORAGE_KEY_INDEX) || '0');
+<div class="step">
+  <h2>STEP 3 — Install the Payroll Tool</h2>
+  <p class="big">Click this link, then press Install.</p>
+  <a class="button green" href="https://gist.githubusercontent.com/jonsal30/61b98d697d7ad423cd6fd7065c2002e1/raw/madison-bulk-import.user.js" target="_blank">
+    INSTALL PAYROLL TOOL
+  </a>
+</div>
 
-    /* ============================================================
-       UI PANEL
-       ============================================================ */
-    const panel = document.createElement('div');
-    panel.style.cssText =
-        'position:fixed; top:10px; right:10px; width:340px; background:#f0f8ff; border:2px solid #0056b3; z-index:9999; padding:15px; font-family:Arial, sans-serif; box-shadow:0 4px 15px rgba(0,0,0,.3); border-radius:8px;';
+<div class="step">
+  <h2>STEP 4 — Use It</h2>
+  <p class="big">Go here and look top-right for the panel.</p>
+  <a class="button orange" href="https://dw.madisonrf.com/PayProc/Employee/NewEmployee.aspx?ID=0" target="_blank">
+    OPEN MADISON – ADD NEW EMPLOYEE
+  </a>
+</div>
 
-    panel.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 style="margin:0; color:#0056b3; font-size:16px;">Payroll V29.2 (Feed Aligned)</h3>
-            <button id="btnClear" style="font-size:10px; background:none; border:none; color:#dc3545; cursor:pointer; text-decoration:underline;">Reset</button>
-        </div>
+<div class="step">
+  <h2>DATA COMES FROM HERE</h2>
+  <p class="big">Copy rows from this Google Sheet.</p>
+  <a class="button" href="https://docs.google.com/spreadsheets/d/1SIc7o4n1yBagjSEXIQUhNxSwCOCuRZMr/edit?gid=459666153#gid=459666153" target="_blank">
+    OPEN DATA SHEET
+  </a>
+</div>
 
-        <div id="viewInput" style="display:${allRows.length ? 'none' : 'block'};">
-            <p style="font-size:12px;">Paste rows:</p>
-            <textarea id="pasteData" rows="5" style="width:100%; font-family:monospace; font-size:11px;"></textarea>
-            <button id="btnLoad" style="width:100%; padding:10px; margin-top:5px; background:#007bff; color:#fff; border:none; font-weight:bold;">LOAD LIST</button>
-        </div>
+<div class="step">
+  <h2>OPTIONAL — Restart</h2>
+  <p class="big">
+    John recommends restarting Chrome or your computer if you have time.<br>
+    If something isn’t working, John will ask you to do this anyway 🙂
+  </p>
+</div>
 
-        <div id="viewControls" style="display:${allRows.length ? 'block' : 'none'};">
-            <div style="background:#fff; padding:10px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px; text-align:center;">
-                <div style="font-size:11px;">Ready:</div>
-                <div id="counterDisplay" style="font-size:18px; font-weight:bold;">#${currentIndex + 1} of ${allRows.length}</div>
-                <div id="previewName" style="font-size:15px; color:#0056b3; font-weight:bold;">--</div>
-            </div>
-
-            <button id="btnFill" style="width:100%; padding:15px; background:#28a745; color:#fff; border:none; font-size:16px; font-weight:bold;">FILL FORM</button>
-
-            <div style="display:flex; justify-content:space-between; margin-top:5px;">
-                <button id="btnFixTax" style="width:48%; padding:5px; background:#ffc107; color:#000; border:1px solid #e0a800; cursor:pointer; border-radius:4px; font-size:11px; display:none;">Fix State Tax</button>
-                <button id="btnFixAddr" style="width:48%; padding:5px; background:#ffc107; color:#000; border:1px solid #e0a800; cursor:pointer; border-radius:4px; font-size:11px; display:none;">Fix Address</button>
-            </div>
-
-            <div id="msgArea" style="font-size:11px; text-align:center; margin-top:5px; min-height:15px;"></div>
-
-            <p style="font-size:11px; text-align:center;">
-                Auto-advances. <b>ESC</b> stops immediately.
-            </p>
-
-            <button id="btnPrev" style="width:100%;">« Previous</button>
-        </div>
-    `;
-    document.body.appendChild(panel);
-
-    /* ============================================================
-       AUTO-REDIRECT
-       ============================================================ */
-    function checkAndRedirect() {
-        if (REDIRECT_IN_PROGRESS) return;
-        const addNewLink = document.querySelector('a[href*="AddNewEmp"]');
-
-        if (addNewLink && allRows.length > 0 && currentIndex < allRows.length) {
-            REDIRECT_IN_PROGRESS = true;
-            document.getElementById('msgArea').innerText = 'Submission detected. Returning to Add New...';
-            const fillBtn = document.getElementById('btnFill');
-            if (fillBtn) fillBtn.style.display = 'none';
-
-            setTimeout(() => {
-                if (!HALT_AUTOMATION) addNewLink.click();
-            }, 2000);
-        }
-    }
-    checkAndRedirect();
-
-    /* ============================================================
-       STATE / UI HELPERS
-       ============================================================ */
-    function saveState() {
-        localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(allRows));
-        localStorage.setItem(STORAGE_KEY_INDEX, currentIndex.toString());
-        updateUI();
-    }
-
-    function updateUI() {
-        if (!allRows.length) return;
-        const cols = allRows[currentIndex].split('\t');
-        const name = cols.length > 1 ? `${cols[0]} ${cols[1]}` : 'Unknown';
-
-        document.getElementById('counterDisplay').innerText = `#${currentIndex + 1} of ${allRows.length}`;
-        document.getElementById('previewName').innerText = name;
-        document.getElementById('viewInput').style.display = 'none';
-        document.getElementById('viewControls').style.display = 'block';
-        document.getElementById('msgArea').innerText = "";
-        
-        document.getElementById('btnFixTax').style.display = 'none';
-        document.getElementById('btnFixAddr').style.display = 'none';
-        
-        const btn = document.getElementById('btnFill');
-        btn.style.display = 'block';
-        btn.innerText = 'FILL FORM';
-        btn.style.background = '#28a745';
-    }
-
-    /* ============================================================
-       UI EVENTS
-       ============================================================ */
-    document.getElementById('btnLoad').onclick = () => {
-        const raw = document.getElementById('pasteData').value.trim();
-        if (!raw) return;
-        allRows = raw.split(/\r?\n/);
-        currentIndex = 0;
-        HALT_AUTOMATION = false;
-        REDIRECT_IN_PROGRESS = false;
-        saveState();
-    };
-
-    document.getElementById('btnClear').onclick = () => {
-        if (!confirm('Clear everything?')) return;
-        allRows = [];
-        currentIndex = 0;
-        localStorage.clear();
-        location.reload();
-    };
-
-    document.getElementById('btnPrev').onclick = () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            saveState();
-        }
-    };
-    
-    document.getElementById('btnFixAddr').onclick = () => { 
-        const suggestLink = document.getElementById('lbSuggestionsPhysicalAddress');
-        if (suggestLink) {
-             suggestLink.click();
-             setTimeout(() => {
-                  const firstItem = document.querySelector('#ASPxListBoxAddressSuggestionsPhysicalAddress_LBT td.dxeListBoxItem_Aqua');
-                  if (firstItem) firstItem.click();
-             }, 1500);
-        }
-    };
-    
-    document.getElementById('btnFixTax').onclick = () => { 
-        if (!allRows[currentIndex]) return;
-        const cols = allRows[currentIndex].split('\t');
-        // V29.2 UPDATE: Shifted tax index +1
-        const taxStatusText = getTaxText(cols[14]); 
-        setField('cboTaxStateW4MaritalStatus_I', taxStatusText);
-        const taxBox = document.getElementById('cboTaxStateW4MaritalStatus_I');
-        if(taxBox) {
-            taxBox.dispatchEvent(new Event('change', { bubbles: true }));
-            taxBox.dispatchEvent(new Event('blur', { bubbles: true }));
-        }
-    };
-
-    /* ============================================================
-       CORE EXECUTION
-       ============================================================ */
-    document.getElementById('btnFill').onclick = function () {
-        HALT_AUTOMATION = false;
-        REDIRECT_IN_PROGRESS = false;
-        document.getElementById('msgArea').innerText = "";
-
-        const row = allRows[currentIndex];
-        if (!row) return;
-
-        const cols = row.split('\t');
-        
-        // V29.2 UPDATE: Increased column requirement due to shift
-        if (cols.length < 20) {
-            document.getElementById('msgArea').innerText = '⚠️ Row too short (Check columns)';
-            // Note: We don't return hard here, we let it try, just in case.
-        }
-
-        // V29.2 UPDATE: Shifted indices +1 to account for "Full Name" / "Emp No" gap
-        // Old: Filing=13, Dep=14, ABA=16
-        // New: Filing=14, Dep=15, ABA=17
-        const taxStatusText = getTaxText(cols[14]); 
-        const fedDollars = getFedAmount(cols[15]); 
-
-        const mapping = {
-            'txtFirstName_I': cols[0],
-            'txtLastName_I': cols[1],
-            'txtSSN_I': cols[7],
-            'cbDateOfBirth_I': cols[6],
-            'cbStatus_I': 'Active',
-            'cbGender_I': 'Undisclosed',
-            'txtPhysicalAddress1_I': cols[2],
-            'txtPhysicalCity_I': cols[3],
-            'cbPhysicalState_I': cols[4],
-            'txtPhysicalZip_I': cols[5],
-            'cbHireDate_I': cols[10],
-            'cbBranch_I': 'GZ_Contractors',
-            
-            // Tax & Bank Shifted:
-            'cboTaxFedW4MaritalStatus_I': taxStatusText,
-            'txtTaxFedW4Dependents_I': fedDollars,
-            'cbTaxState_I': cols[4],
-            'cboTaxStateW4MaritalStatus_I': taxStatusText,
-            'txtStateDependent_I': cols[15],
-            'txtPrimaryABA_I': cols[17],
-            'txtPrimaryAccountNumber_I': cols[18],
-            'cbPrimaryAccountType_I': (cols[19] || "").charAt(0).toUpperCase() + (cols[19] || "").slice(1).toLowerCase()
-        };
-
-        // 1. Initial LOUD fill
-        for (let id in mapping) {
-            if (HALT_AUTOMATION) return;
-            setField(id, mapping[id]);
-        }
-
-        if (cols[18] && cols[18].trim().length > 4) {
-            setField('cbPrimary_I', 'Active');
-        }
-
-        // 2. Staggered Tax Repairs
-        setTimeout(() => {
-            if (!HALT_AUTOMATION) {
-                setField('cboTaxStateW4MaritalStatus_I', taxStatusText);
-                setField('txtTaxFedW4Dependents_I', fedDollars);
-            }
-        }, 500);
-
-        setTimeout(() => {
-            if (!HALT_AUTOMATION) {
-                setField('cboTaxStateW4MaritalStatus_I', taxStatusText);
-            }
-        }, 2000);
-
-        // 3. FINAL TAX SEAL
-        setTimeout(() => {
-            if (HALT_AUTOMATION) return;
-            const taxBox = document.getElementById('cboTaxStateW4MaritalStatus_I');
-            if (taxBox) {
-                taxBox.dispatchEvent(new Event('change', { bubbles: true }));
-                taxBox.dispatchEvent(new Event('blur', { bubbles: true }));
-            }
-        }, 3800);
-
-        // 4. ADDRESS AUTO-ACCEPT
-        setTimeout(() => {
-            if (HALT_AUTOMATION) return;
-            const suggestLink = document.getElementById('lbSuggestionsPhysicalAddress');
-            
-            if (suggestLink && suggestLink.offsetParent !== null) {
-                suggestLink.click();
-                let tries = 0;
-                const addrInterval = setInterval(() => {
-                    if (HALT_AUTOMATION) { clearInterval(addrInterval); return; }
-                    
-                    const firstItem = document.querySelector('#ASPxListBoxAddressSuggestionsPhysicalAddress_LBT td.dxeListBoxItem_Aqua');
-                    
-                    if (firstItem) {
-                        firstItem.click();
-                        clearInterval(addrInterval);
-                        document.getElementById('msgArea').innerText = "Address Fixed.";
-                    } else {
-                        tries++;
-                        if (tries > 10) clearInterval(addrInterval);
-                    }
-                }, 300);
-            } else {
-                 const taxBox = document.getElementById('cboTaxStateW4MaritalStatus_I');
-                 if(!taxBox || taxBox.value === "") {
-                     document.getElementById('btnFixTax').style.display = 'block';
-                 }
-            }
-        }, 2500);
-
-        // 5. Advance Cursor
-        if (currentIndex < allRows.length - 1) {
-            currentIndex++;
-            saveState();
-        } else {
-            alert('Last employee reached.');
-        }
-    };
-
-    /* ============================================================
-       HELPERS
-       ============================================================ */
-    function setField(partialId, value) {
-        if (!value && value !== 0) return;
-        const el = document.getElementById(partialId) || document.querySelector(`[id$="${partialId}"]`);
-        if (!el) return;
-
-        el.focus();
-        el.value = value.toString().trim();
-        ['keydown', 'keypress', 'input', 'change', 'blur'].forEach(evt =>
-            el.dispatchEvent(new Event(evt, { bubbles: true }))
-        );
-    }
-
-    function getTaxText(status) {
-        if (!status) return '';
-        status = status.toLowerCase();
-        if (status.startsWith('s')) return 'S=Single';
-        if (status.startsWith('m')) return 'M=Married';
-        if (status.startsWith('h')) return 'H=Head of Household';
-        return status;
-    }
-
-    function getFedAmount(dep) {
-        const n = parseInt(dep);
-        return isNaN(n) || n === 0 ? '' : (n * 2000).toString();
-    }
-
-    if (allRows.length) updateUI();
-})();
+</body>
+</html>
