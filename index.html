@@ -1,111 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Madison Payroll Tool – Install</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    padding: 20px;
-    max-width: 900px;
-    margin: auto;
-  }
-  h1 {
-    text-align: center;
-    font-size: 36px;
-  }
-  .step {
-    background: #ffffff;
-    border: 2px solid #0056b3;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 30px 0;
-  }
-  .step h2 {
-    font-size: 28px;
-    margin-top: 0;
-  }
-  .big {
-    font-size: 22px;
-    font-weight: bold;
-  }
-  a.button {
-    display: block;
-    background: #007bff;
-    color: white;
-    text-align: center;
-    padding: 18px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 22px;
-    margin-top: 15px;
-  }
-  a.button.green { background: #28a745; }
-  a.button.orange { background: #fd7e14; }
-  .note {
-    font-size: 18px;
-    margin-top: 15px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Garza • Madison Payroll Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --gg-keystone:#4600FF;
+      --gg-foundation:#101820;
+      --gg-vertex:#FF2E63;
+      --gg-horizon:#F5F5F5;
+      --font-sans:system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      --radius:16px;
+    }
+
+    body{
+      margin:0;
+      font-family:var(--font-sans);
+      background:var(--gg-horizon);
+      color:var(--gg-foundation);
+    }
+
+    .header{
+      background:var(--gg-keystone);
+      color:white;
+      padding:28px 18px;
+    }
+    .wrap{
+      max-width:920px;
+      margin:0 auto;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .logo{
+      width:56px;
+      height:56px;
+      border-radius:14px;
+      background:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .logo img{ width:100%; height:100%; object-fit:cover; }
+    h1{
+      font-size:30px;
+      line-height:1.05;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin-top:6px;
+      opacity:.92;
+      font-size:16px;
+    }
+
+    .content{
+      padding:18px;
+    }
+
+    .card{
+      background:white;
+      border:1px solid rgba(16,24,32,.12);
+      border-radius:var(--radius);
+      padding:18px;
+      margin:16px 0;
+      box-shadow:0 6px 18px rgba(16,24,32,.06);
+    }
+
+    .stepTitle{
+      font-size:20px;
+      font-weight:800;
+      margin:0 0 10px 0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pill{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      color:white;
+      background:var(--gg-keystone);
+    }
+
+    .btn{
+      display:block;
+      width:100%;
+      padding:16px 14px;
+      border-radius:14px;
+      border:none;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+      color:white;
+      background:var(--gg-keystone);
+    }
+    .btn.vertex{ background:var(--gg-vertex); }
+    .btn.gray{ background:#6c757d; }
+    .btn:active{ transform: translateY(1px); }
+
+    .hint{
+      margin-top:10px;
+      font-size:15px;
+      background:rgba(245,245,245,.9);
+      border:1px dashed rgba(16,24,32,.25);
+      padding:12px;
+      border-radius:12px;
+    }
+
+    .mono{
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-weight:800;
+      background:rgba(16,24,32,.06);
+      padding:6px 10px;
+      border-radius:10px;
+      display:inline-block;
+      margin-top:8px;
+    }
+
+    .footer{
+      padding:18px;
+      opacity:.9;
+      font-size:14px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="header">
+    <div class="wrap brand">
+      <!-- Optional: swap src to your hosted logo path -->
+      <div class="logo" title="Garza Group">
+        <img src="GarzaGroup_Trademark_Logo_300dpi.jpeg" alt="Garza Group Logo" />
+      </div>
+      <div>
+        <h1>Madison Payroll Tool</h1>
+        <div class="subtitle">NO-READERS-NEEDED • Garza Group</div>
+      </div>
+    </div>
+  </div>
 
-<h1>Madison Payroll Tool<br>NO READERS NEEDED INSTALL</h1>
+  <div class="content wrap">
 
-<div class="step">
-  <h2>STEP 1 — Install Tampermonkey</h2>
-  <p class="big">Click this link, then click “Add to Chrome”.</p>
-  <a class="button" href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank">
-    INSTALL TAMPERMONKEY
-  </a>
-</div>
+    <div class="card">
+      <div class="stepTitle"><span class="pill">STEP 1</span> Install Tampermonkey</div>
+      <a class="btn" target="_blank"
+         href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en">
+        Open Chrome Web Store → Add to Chrome
+      </a>
+    </div>
 
-<div class="step">
-  <h2>STEP 2 — Turn This ON (REQUIRED)</h2>
-  <p class="big">Type this in Chrome and press Enter:</p>
-  <p class="big">chrome://extensions/</p>
-  <p class="note">
-    • Click <b>Details</b> on Tampermonkey<br>
-    • Make sure <b>TAMPERMONKEY = ON</b><br>
-    • Turn <b>ALLOW USER SCRIPTS = ON</b><br><br>
-    <b>BOTH switches must be BLUE</b>
-  </p>
-</div>
+    <div class="card">
+      <div class="stepTitle"><span class="pill" style="background:var(--gg-vertex)">STEP 2</span> Turn this ON (Required)</div>
 
-<div class="step">
-  <h2>STEP 3 — Install the Payroll Tool</h2>
-  <p class="big">Click this link, then press Install.</p>
-  <a class="button green" href="https://gist.githubusercontent.com/jonsal30/61b98d697d7ad423cd6fd7065c2002e1/raw/madison-bulk-import.user.js" target="_blank">
-    INSTALL PAYROLL TOOL
-  </a>
-</div>
+      <button class="btn vertex" id="btnExt">
+        Open a New Tab + Copy chrome://extensions/ (Ready to Paste)
+      </button>
 
-<div class="step">
-  <h2>STEP 4 — Use It</h2>
-  <p class="big">Go here and look top-right for the panel.</p>
-  <a class="button orange" href="https://dw.madisonrf.com/PayProc/Employee/NewEmployee.aspx?ID=0" target="_blank">
-    OPEN MADISON – ADD NEW EMPLOYEE
-  </a>
-</div>
+      <div class="hint" id="extHint" style="display:none;">
+        <div><b>Now do this:</b> Right-click the address bar → <b>Paste</b> → press <b>Enter</b></div>
+        <div class="mono">chrome://extensions/</div>
+        <div style="margin-top:8px;">
+          Tampermonkey → <b>Details</b> → make BOTH switches BLUE:
+          <b>Tampermonkey = ON</b> and <b>Allow User Scripts = ON</b>
+        </div>
+      </div>
 
-<div class="step">
-  <h2>DATA COMES FROM HERE</h2>
-  <p class="big">Copy rows from this Google Sheet.</p>
-  <a class="button" href="https://docs.google.com/spreadsheets/d/1SIc7o4n1yBagjSEXIQUhNxSwCOCuRZMr/edit?gid=459666153#gid=459666153" target="_blank">
-    OPEN DATA SHEET
-  </a>
-</div>
+      <div class="hint" style="margin-top:12px;">
+        If the button doesn’t copy (rare), just type this in the address bar:
+        <div class="mono">chrome://extensions/</div>
+      </div>
+    </div>
 
-<div class="step">
-  <h2>OPTIONAL — Restart</h2>
-  <p class="big">
-    John recommends restarting Chrome or your computer if you have time.<br>
-    If something isn’t working, John will ask you to do this anyway 🙂
-  </p>
-</div>
+    <div class="card">
+      <div class="stepTitle"><span class="pill">STEP 3</span> Install the Payroll Tool</div>
+      <a class="btn" target="_blank"
+         href="https://gist.githubusercontent.com/jonsal30/61b98d697d7ad423cd6fd7065c2002e1/raw/madison-bulk-import.user.js">
+        Install Payroll Tool (Tampermonkey → Install)
+      </a>
+      <div class="hint">Seeing code is normal. Click <b>Install</b>.</div>
+    </div>
 
+    <div class="card">
+      <div class="stepTitle"><span class="pill" style="background:var(--gg-vertex)">STEP 4</span> Copy New Rows (Insurance Prep)</div>
+      <a class="btn gray" target="_blank"
+         href="https://docs.google.com/spreadsheets/d/1SIc7o4n1yBagjSEXIQUhNxSwCOCuRZMr/edit?gid=459666153#gid=459666153">
+        Open Insurance Prep Sheet (Copy up to 100 rows)
+      </a>
+      <div class="hint">Copy NEW rows only (up to 100 at a time). This gives the tool a moment to settle.</div>
+    </div>
+
+    <div class="card">
+      <div class="stepTitle"><span class="pill">STEP 5</span> Use It</div>
+      <a class="btn" target="_blank"
+         href="https://dw.madisonrf.com/PayProc/Employee/NewEmployee.aspx?ID=0">
+        Open Madison — Add New Employee
+      </a>
+      <div class="hint">
+        Look <b>top-right</b> for the hovering panel → paste rows into the white box → <b>LOAD LIST</b> → start workflow.<br>
+        Press <b>ESC</b> anytime to stop.
+      </div>
+    </div>
+
+    <div class="footer">
+      Optional: Restart Chrome/computer if you have time. If something isn’t working, John will ask you to do this anyway 🙂<br>
+      Hope you enjoy. — <b>John Covarrubias</b> • Garza Group
+    </div>
+  </div>
+
+  <script>
+    // Button: open a new tab + copy chrome://extensions/ to clipboard
+    // (Chrome blocks auto-navigation to chrome:// pages, so this is the best allowed UX.)
+    const btn = document.getElementById('btnExt');
+    const hint = document.getElementById('extHint');
+
+    btn.addEventListener('click', async () => {
+      // Keep the install page open; open a helper tab.
+      window.open('about:blank', '_blank');
+
+      try {
+        await navigator.clipboard.writeText('chrome://extensions/');
+        hint.style.display = 'block';
+      } catch (e) {
+        // Clipboard access can fail if the browser blocks it; fall back to manual typing.
+        hint.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
